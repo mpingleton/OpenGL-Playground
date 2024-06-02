@@ -4,6 +4,14 @@
 
 #include <iostream>
 
+int windowWidth = 640;
+int windowHeight = 480;
+
+void glfwWindowSizeCallback(GLFWwindow* window, int width, int height) {
+	windowWidth = width;
+	windowHeight = height;
+}
+
 int main() {
 	glfwInit();
 
@@ -13,8 +21,9 @@ int main() {
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Hello Triangle OpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Hello Triangle OpenGL", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
+	glfwSetWindowSizeCallback(window, glfwWindowSizeCallback);
 
 	glewExperimental = GL_TRUE;
 	glewInit();
@@ -74,9 +83,12 @@ int main() {
 
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, windowWidth, windowHeight);
+
 		glUseProgram(shaderProgram);
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 	}
